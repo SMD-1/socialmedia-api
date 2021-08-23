@@ -28,7 +28,7 @@ const UserSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
-    following: {
+    followings: {
       type: Array,
       default: [],
     },
@@ -36,12 +36,20 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    date: {
-      type: Date,
-      default: Date.now,
+    description: {
+      type: String,
+      max: 200,
+    },
+    city: {
+      type: String,
+      max: 50,
+    },
+    from: {
+      type: String,
+      max: 50,
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.model("userrr", UserSchema);

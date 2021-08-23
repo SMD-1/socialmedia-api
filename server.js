@@ -1,27 +1,37 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const helmet = require("helmet");
-const dotenv = require("dotenv");
 const morgan = require("morgan");
+const helmet = require("helmet");
+const mongoose = require("mongoose");
 require("dotenv/config");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-mongoose.connect(
-  "DB_CONNECT",
-  { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
-  () => {
-    console.log("Mongo DB connected");
-  }
-);
+const PORT = 3000;
 
 // middleware
 app.use(express.json());
 app.use(helmet());
 app.use(morgan("common"));
 
-app.use("/api/users", require("./routes/api/user"));
-app.use("/api/auth", require("./routes/api/auth"));
+app.use("/users", require("./routes/api/user"));
+app.use("/auth", require("./routes/api/auth"));
+
+mongoose.connect(
+  process.env.MONGODB_URL,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+  },
+  (err) => {
+    if (err == null) {
+      console.log("Mongo DB connected");
+    } else {
+      console.log(err);
+    }
+  }
+);
+
 app.get("/", (req, res) => {
   res.send("Hello World!!!");
 });
