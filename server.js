@@ -14,6 +14,7 @@ app.use(morgan("common"));
 
 app.use("/users", require("./routes/api/user"));
 app.use("/auth", require("./routes/api/auth"));
+app.use("/posts", require("./routes/api/post"));
 
 mongoose.connect(
   process.env.MONGODB_URL,
