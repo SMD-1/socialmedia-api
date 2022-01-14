@@ -20,6 +20,10 @@ const UserSchema = new mongoose.Schema(
       require: true,
       min: 6,
     },
+    profilePicture: {
+      type: String,
+      default: "",
+    },
     coverPicture: {
       type: String,
       default: "",
@@ -40,11 +44,15 @@ const UserSchema = new mongoose.Schema(
       type: String,
       max: 200,
     },
-    city: {
+    department: {
       type: String,
       max: 50,
     },
     from: {
+      type: String,
+      max: 50,
+    },
+    semester: {
       type: String,
       max: 50,
     },

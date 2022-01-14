@@ -12,7 +12,7 @@ router.put("/:id", async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         req.body.password = await bcrypt.hash(req.body.password, salt);
       } catch (err) {
-        res.status(500).json(err);
+        res.status(500).json(err.message);
         console.log(err);
       }
     }
@@ -47,21 +47,49 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// gat user
-router.get("/:id", async (req, res) => {
+// get user
+router.get("/", async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const userId = req.query.userId;
+    const username = req.query.username;
+
+    const user = userId
+      ? await User.findById(userId)
+      : await User.findOne({ username: username });
     // if we dont want to show some property
-    const { password, ...other } = user._doc;
+    const { password, updatedAt, ...other } = user._doc;
     res.status(200).json(other);
   } catch (err) {
     res.status(500).json(err);
     console.log(err);
   }
 });
+
+// get friends
+router.get("/friends/:userId", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    const friends = await Promise.all(
+      user.followings.map((friendId) => {
+        return User.findById(friendId);
+      })
+    );
+    let friendList = [];
+    friends.map((friend) => {
+      const { _id, username, profilePicture } = friend;
+      friendList.push({ _id, username, profilePicture });
+    });
+    res.status(200).json(friendList);
+  } catch (err) {
+    res.status(500).json(err);
+    console.log(err);
+  }
+});
+
 // follow user
 router.put("/:id/follow", async (req, res) => {
   if (req.body.userId !== req.params.id) {
+    //req.body.userId is id of person whom you want to follow, params id is your id
     try {
       const user = await User.findById(req.params.id);
       const currentUser = await User.findById(req.body.userId);
@@ -79,7 +107,7 @@ router.put("/:id/follow", async (req, res) => {
       console.log(err);
     }
   } else {
-    res.status(403).jsonn("You cannot follow yourself!");
+    res.status(403).json("You cannot follow yourself!");
   }
 });
 
