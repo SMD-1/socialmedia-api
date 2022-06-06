@@ -10,7 +10,6 @@ router.get("/register", (req, res) => {
 
 // Register
 router.post("/register", async (req, res) => {
-  // console.log(req.body);
   const { username, email, password } = req.body;
   try {
     // generate hashed password
@@ -26,8 +25,8 @@ router.post("/register", async (req, res) => {
     });
 
     // save user
-    const result = await newUser.save();
-    res.status(200).json(result);
+    const savedUser = await newUser.save();
+    res.status(200).json(savedUser);
   } catch (err) {
     console.log(err.message);
     res.status(500).send("Server error");
@@ -39,10 +38,10 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
-    !user && res.status(404).send("User not found!");
+    if (!user) return res.status(404).send("User not found!");
 
     const checkPassword = await bcrypt.compare(password, user.password);
-    !checkPassword && res.status(400).send("Wrong password!");
+    if (!checkPassword) return res.status(400).send("Wrong password!");
     console.log(user);
     res.status(200).json(user);
   } catch (err) {

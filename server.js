@@ -4,7 +4,8 @@ const helmet = require("helmet");
 const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
-require("dotenv/config");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const app = express();
 const PORT = 4000;
