@@ -5,10 +5,28 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
 const dotenv = require("dotenv");
+const User = require("./model/User")
 dotenv.config();
 
 const app = express();
 const PORT = 4000;
+
+mongoose.connect(
+  process.env.MONGODB_URL,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+  },
+  (err) => {
+    if (err == null) {
+      console.log("Mongo DB connected");
+    } else {
+      console.log(err);
+    }
+  }
+);
 
 // middleware
 app.use((req, res, next) => {
@@ -54,25 +72,10 @@ app.use("/posts", require("./routes/api/post"));
 app.use("/conversations", require("./routes/api/conversation"));
 app.use("/messages", require("./routes/api/message"));
 
-mongoose.connect(
-  process.env.MONGODB_URL,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-  },
-  (err) => {
-    if (err == null) {
-      console.log("Mongo DB connected");
-    } else {
-      console.log(err);
-    }
-  }
-);
 
-app.get("/", (req, res) => {
-  res.send("Hello World!!!");
+app.get("/allUsers", async (_, res) => {
+  const allUser = await User.find({});
+  res.status(200).json(allUser);
 });
 
 app.listen(PORT, () =>
