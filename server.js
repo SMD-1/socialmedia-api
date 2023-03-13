@@ -2,7 +2,6 @@ const express = require("express");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const mongoose = require("mongoose");
-const multer = require("multer");
 const path = require("path");
 const dotenv = require("dotenv");
 const User = require("./model/User");
