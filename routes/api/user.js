@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const User = require("../../model/User");
 
 // update user
-router.put("/:id", async (req, res) => {
+router.patch("/:id", async (req, res) => {
   if (req.body.userId === req.params.id || req.body.isAdmin) {
     // update password
     if (req.body.password) {
@@ -47,26 +47,33 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// get all Users
+// router.get("/", async (req, res) => {
+//   try {
+//     const allUser = await User.find();
+//     console.log(allUser);
+//     res.status(200).json(allUser);
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
+
 // get user
 router.get("/", async (req, res) => {
+  const userId = req.query.userId;
+  const username = req.query.username;
   try {
-    const userId = req.query.userId;
-    const username = req.query.username;
-
     const user = userId
       ? await User.findById(userId)
       : await User.findOne({ username: username });
     // if we dont want to show some property
     const { password, updatedAt, ...other } = user._doc;
-    res.status(200).json(other);
+    res.status(200).send(other);
   } catch (err) {
     res.status(500).json(err);
     console.log(err);
   }
 });
-
-// getAllUser
-
 
 // get friends
 router.get("/friends/:userId", async (req, res) => {

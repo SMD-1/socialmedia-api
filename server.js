@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
 const dotenv = require("dotenv");
-const User = require("./model/User")
+const User = require("./model/User");
 dotenv.config();
 
 const app = express();
@@ -47,31 +47,11 @@ app.use(express.json({ extend: false }));
 app.use(helmet());
 app.use(morgan("common"));
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./public/images");
-  },
-  filename: (req, file, cb) => {
-    console.log(file);
-    cb(null, file.originalname);
-  },
-});
-
-const upload = multer({ storage: storage });
-app.post("/upload", upload.single("file"), (req, res) => {
-  try {
-    return res.status(200).json("File uploaded successfully");
-  } catch (err) {
-    console.log(err);
-  }
-});
-
 app.use("/users", require("./routes/api/user"));
 app.use("/auth", require("./routes/api/auth"));
 app.use("/posts", require("./routes/api/post"));
 app.use("/conversations", require("./routes/api/conversation"));
 app.use("/messages", require("./routes/api/message"));
-
 
 app.get("/allUsers", async (_, res) => {
   const allUser = await User.find({});
