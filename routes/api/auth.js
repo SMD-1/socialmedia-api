@@ -28,8 +28,9 @@ router.post("/register", async (req, res) => {
     const savedUser = await newUser.save();
     res.status(200).json(savedUser);
   } catch (err) {
-    console.log(err.message);
-    res.status(500).send("Server error");
+    console.log("error", err.message);
+    res.status(409).json({ message: err.message, statusCode: err.code });
+    // console.log(err.status);
   }
 });
 
@@ -38,15 +39,16 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(403).send("User not found!");
+    if (!user) return res.status(403).json({ msg: "User not found!" });
 
     const checkPassword = await bcrypt.compare(password, user.password);
     if (!checkPassword)
-      return res.status(400).json({ msg: "Password didn't match" });
-    console.log(user);
+      return res.status(401).json({ msg: "Password didn't match" });
+
     res.status(200).json(user);
   } catch (err) {
-    res.status(500).json(err);
+    console.log(err);
+    res.status(500).json({ msg: "Server error!" });
   }
 });
 

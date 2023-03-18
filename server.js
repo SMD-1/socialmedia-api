@@ -8,7 +8,7 @@ const User = require("./model/User");
 dotenv.config();
 
 const app = express();
-const PORT = 4000;
+const PORT = 4100;
 
 mongoose.connect(
   process.env.MONGODB_URL,
