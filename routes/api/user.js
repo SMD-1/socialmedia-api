@@ -75,6 +75,29 @@ router.get("/", async (req, res) => {
   }
 });
 
+// recent 5 user
+router.get("/fiveMostrecent", async (req, res) => {
+  try {
+    const recentUser = await User.find().sort({ createdAt: -1 }).limit(5);
+    res.status(200).json(recentUser);
+  } catch (err) {
+    res.status(500).json(err);
+    console.log(err);
+  }
+});
+
+// recent user
+router.get("/mostrecent", async (req, res) => {
+  try {
+    const recentUser = await User.find().sort({ createdAt: -1 });
+    // console.log(recentUser.data);
+    res.status(200).json(recentUser);
+  } catch (err) {
+    res.status(500).json(err);
+    console.log(err);
+  }
+});
+
 // get friends
 router.get("/friends/:userId", async (req, res) => {
   try {
