@@ -28,9 +28,8 @@ router.post("/register", async (req, res) => {
     const savedUser = await newUser.save();
     res.status(200).json(savedUser);
   } catch (err) {
-    console.log("error", err.message);
-    res.status(409).json({ message: err.message, statusCode: err.code });
-    // console.log(err.status);
+    // console.log("error", err.message);
+    res.status(500).json({ msg: "It's not your fault, Server error" });
   }
 });
 
