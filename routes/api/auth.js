@@ -23,13 +23,16 @@ router.post("/register", async (req, res) => {
       email: email,
       password: hashedPassword,
     });
-
     // save user
     const savedUser = await newUser.save();
     res.status(200).json(savedUser);
   } catch (err) {
     // console.log("error", err.message);
-    res.status(500).json({ msg: "It's not your fault, Server error" });
+    if (err.code === 11000) {
+      res.status(401).json({ msg: "Username Already Exists!" });
+    } else {
+      res.status(500).json({ msg: "It's not your fault, Server error" });
+    }
   }
 });
 

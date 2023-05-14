@@ -17,11 +17,12 @@ router.patch("/:id", async (req, res) => {
       }
     }
     try {
-      const user = await User.findByIdAndUpdate(req.params.id, {
+      await User.findByIdAndUpdate(req.params.id, {
         $set: req.body,
       });
-      console.log(user);
-      res.status(200).json("Account has been Updated Successfully");
+      const user = await User.findById(req.params.id);
+      // console.log(user);
+      res.status(200).json(user);
     } catch (err) {
       res.status(500).json(err);
       console.log(err);
